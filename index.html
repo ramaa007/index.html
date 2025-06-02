@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage CRM Pro | Professional Client Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #4895ef;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --cba: #FFD700;
+            --nab: #FF6B6B;
+            --anz: #4D96FF;
+            --westpac: #FFA07A;
+            --other: #CCCCCC;
+            --purple: #9b59b6;
+            --teal: #20c997;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6f7ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+        }
+        
+        .stat-card.active::before { background: var(--success); }
+        .stat-card.settled::before { background: var(--primary); }
+        .stat-card.overdue::before { background: var(--danger); }
+        .stat-card.ytd::before { background: var(--purple); }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 10px 0;
+            color: var(--dark);
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .stat-sub {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            padding-top: 10px;
+            border-top: 1px dashed var(--light-gray);
+        }
+        
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        
+        .date-filter input {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+        
+        .nav-tab {
+            padding: 12px 30px;
+            cursor: pointer;
+            font-weight: 500;
+            border-radius: 30px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dark);
+        }
+        
+        .nav-tab:hover, .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 1.05rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
+        }
+        
+        /* Application Tracker */
+        .tracker-container {
+            background: #f8f9ff;
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+        }
+        
+        .tracker {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .tracker-stage {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stage-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .stage-body {
+            padding: 20px;
+            min-height: 350px;
+        }
+        
+        .client-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .client-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .client-card.CBA { border-left-color: var(--cba); }
+        .client-card.NAB { border-left-color: var(--nab); }
+        .client-card.ANZ { border-left-color: var(--anz); }
+        .client-card.Westpac { border-left-color: var(--westpac); }
+        .client-card.Other { border-left-color: var(--other); }
+        
+        .client-card.overdue {
+            background: linear-gradient(to right, #fff8f8, white);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.2); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        .client-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .client-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .client-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .action-btn.prev {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .action-btn.next {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .action-btn.delete {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .action-btn.edit {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        /* Email Templates */
+        .email-templates-container {
+            display: grid;
+            grid-template-columns: 300px 1fr);
+            gap: 30px;
+        }
+        
+        .template-list {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .template-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            background: white;
+        }
+        
+        .template-item:hover {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left-color: var(--primary);
+        }
+        
+        .template-item.active {
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-left-color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .template-display {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .template-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .template-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 15px;
+        }
+        
+        .template-content {
+            background: #f9f9ff;
+            border-radius: 12px;
+            padding: 25px;
+            line-height: 1.8;
+            font-size: 1.05rem;
+            border-left: 4px solid var(--accent);
+            font-family: 'Poppins', sans-serif;
+            color: #444;
+        }
+        
+        .template-content p {
+            margin-bottom: 15px;
+        }
+        
+        .template-content ul {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        
+        .template-content li {
+            margin-bottom: 10px;
+        }
+        
+        .template-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .complete-info-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        /* Notes History */
+        .notes-history {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        
+        .note-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .note-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .note-content {
+            background: #f8f9ff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .tracker {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .email-templates-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .tracker {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                border-radius: 15px;
+            }
+            
+            .nav-tab {
+                margin: 5px 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .date-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-home"></i> Mortgage CRM Pro</h1>
+            <p class="subtitle">Complete solution for tracking mortgage applications, client communication, and deal analytics</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Dashboard Stats -->
+        <div class="dashboard-stats">
+            <div class="stat-card active">
+                <div class="stat-value">$1,250,000</div>
+                <div class="stat-label">Active Deals Value</div>
+                <div class="stat-sub">This Month: $850,000</div>
+            </div>
+            
+            <div class="stat-card settled">
+                <div class="stat-value">$780,000</div>
+                <div class="stat-label">Settled Value</div>
+                <div class="stat-sub">This Month: $430,000</div>
+            </div>
+            
+            <div class="stat-card overdue">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Overdue Items</div>
+                <div class="stat-sub">This Month: 2</div>
+            </div>
+            
+            <div class="stat-card ytd">
+                <div class="stat-value">$4,560,000</div>
+                <div class="stat-label">YTD Settled</div>
+                <div class="stat-sub">Year to Date Value</div>
+                <div class="date-filter">
+                    <input type="date" id="ytd-start-date">
+                    <input type="date" id="ytd-end-date">
+                    <button class="btn" onclick="filterYTD()" style="padding: 8px 15px;">Filter</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-target="add-client">
+                <i class="fas fa-user-plus"></i> Add New Client
+            </div>
+            <div class="nav-tab" data-target="application-tracker">
+                <i class="fas fa-chart-line"></i> Application Tracker
+            </div>
+            <div class="nav-tab" data-target="email-templates">
+                <i class="fas fa-envelope"></i> Email Templates
+            </div>
+            <div class="nav-tab" data-target="client-search">
+                <i class="fas fa-search"></i> Client Search
+            </div>
+        </div>
+        
+        <!-- Add New Client Section -->
+        <section id="add-client" class="section active">
+            <h2 class="section-title"><i class="fas fa-user-plus"></i> Add New Client</h2>
+            <form id="client-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full-name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="full-name" required placeholder="John Smith">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone"><i class="fas fa-phone"></i> Phone</label>
+                        <input type="tel" id="phone" required placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" required placeholder="john@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="application-date"><i class="fas fa-calendar"></i> Application Date</label>
+                        <input type="date" id="application-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loan-amount"><i class="fas fa-dollar-sign"></i> Loan Amount</label>
+                        <input type="number" id="loan-amount" required placeholder="500,000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                        <input type="text" id="address" required placeholder="123 Main Street">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lender"><i class="fas fa-university"></i> Lender</label>
+                        <select id="lender" required>
+                            <option value="">Select Lender</option>
+                            <option value="CBA" style="background-color: var(--cba)">CBA</option>
+                            <option value="NAB" style="background-color: var(--nab); color: white;">NAB</option>
+                            <option value="ANZ" style="background-color: var(--anz); color: white;">ANZ</option>
+                            <option value="Westpac" style="background-color: var(--westpac)">Westpac</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="applicant-type"><i class="fas fa-briefcase"></i> Applicant Type</label>
+                        <select id="applicant-type" required>
+                            <option value="">Select Type</option>
+                            <option value="PAYG">PAYG</option>
+                            <option value="ABN">ABN</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="application-type"><i class="fas fa-file-contract"></i> Application Type</label>
+                        <select id="application-type" required>
+                            <option value="">Select Type</option>
+                            <option value="Purchase OO">Purchase OO</option>
+                            <option value="Purchase INV">Purchase INV</option>
+                            <option value="Refinance">Refinance</option>
+                            <option value="Refinance+Cash">Refinance + Cash Out</option>
+                            <option value="Refinance+Purchase">Refinance + Purchase</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes"><i class="fas fa-sticky-note"></i> Initial Notes</label>
+                    <textarea id="notes" rows="4" placeholder="Add any additional notes about the client..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-save"></i> Save Client
+                </button>
+            </form>
+        </section>
+        
+        <!-- Application Tracker Section -->
+        <section id="application-tracker" class="section">
+            <h2 class="section-title"><i class="fas fa-chart-line"></i> Application Tracker</h2>
+            
+            <div class="tracker-container">
+                <div class="tracker">
+                    <div class="tracker-stage">
+                        <div class="stage-header">1. Welcome/Docs</div>
+                        <div class="stage-body" id="stage-1">
+                            <!-- Client cards will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="tracker-stage">
+                        <div class="stage-header">2. SOCA (3d)</div>
+                        <div class="stage-body" id="stage-2">
+                            <!-- Client cards will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="tracker-stage">
+                        <div class="stage-header">3. Approved (3d)</div>
+                        <div class="stage-body" id="stage-3">
+                            <!-- Client cards will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="tracker-stage">
+                        <div class="stage-header">4. Signing (3d)</div>
+                        <div class="stage-body" id="stage-4">
+                            <!-- Client cards will be dynamically added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="tracker-stage">
+                        <div class="stage-header">5. Settlement (3d)</div>
+                        <div class="stage-body" id="stage-5">
+                            <!-- Client cards will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Email Templates Section -->
+        <section id="email-templates" class="section">
+            <h2 class="section-title"><i class="fas fa-envelope"></i> Email Templates</h2>
+            
+            <div class="email-templates-container">
+                <div class="template-list">
+                    <div class="template-item active" data-template="welcome">
+                        <div><strong>Welcome Letter</strong></div>
+                        <small>For all new clients</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="payg-purchase-oo">
+                        <div><strong>PAYG - Purchase OO</strong></div>
+                        <small>Document request</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="payg-purchase-inv">
+                        <div><strong>PAYG - Purchase INV</strong></div>
+                        <small>Document request</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="payg-refinance">
+                        <div><strong>PAYG - Refinance</strong></div>
+                        <small>Document request</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="payg-refinance-cash">
+                        <div><strong>PAYG - Refinance + Cash</strong></div>
+                        <small>Document request</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="payg-refinance-purchase">
+                        <div><strong>PAYG - Refinance + Purchase</strong></div>
+                        <small>Document request</small>
+                    </div>
+                    
+                    <div class="template-item" data-template="abn-purchase-oo">
+                        <div><strong>ABN - Purchase OO</strong></div>
+                        <small>Document request</small>
+                    </div>
+                </div>
+                
+                <div class="template-display">
+                    <!-- Template content will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Client Search Section -->
+        <section id="client-search" class="section">
+            <h2 class="section-title"><i class="fas fa-search"></i> Client Search</h2>
+            
+            <div class="form-group">
+                <input type="text" id="search-input" placeholder="Search by name, email, or phone..." class="search-input">
+            </div>
+            
+            <div class="search-results" id="search-results">
+                <!-- Search results will appear here -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Client Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Edit Client Details</h2>
+            <form id="edit-client-form">
+                <div class="form-group">
+                    <label for="edit-name">Full Name</label>
+                    <input type="text" id="edit-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-phone">Phone</label>
+                    <input type="tel" id="edit-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-application-date">Application Date</label>
+                    <input type="date" id="edit-application-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-loan-amount">Loan Amount</label>
+                    <input type="number" id="edit-loan-amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-lender">Lender</label>
+                    <select id="edit-lender" required>
+                        <option value="CBA" style="background-color: var(--cba)">CBA</option>
+                        <option value="NAB" style="background-color: var(--nab); color: white;">NAB</option>
+                        <option value="ANZ" style="background-color: var(--anz); color: white;">ANZ</option>
+                        <option value="Westpac" style="background-color: var(--westpac)">Westpac</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-applicant-type">Applicant Type</label>
+                    <select id="edit-applicant-type" required>
+                        <option value="PAYG">PAYG</option>
+                        <option value="ABN">ABN</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-application-type">Application Type</label>
+                    <select id="edit-application-type" required>
+                        <option value="Purchase OO">Purchase OO</option>
+                        <option value="Purchase INV">Purchase INV</option>
+                        <option value="Refinance">Refinance</option>
+                        <option value="Refinance+Cash">Refinance + Cash Out</option>
+                        <option value="Refinance+Purchase">Refinance + Purchase</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-new-note">Add New Note</label>
+                    <textarea id="edit-new-note" rows="4" placeholder="Add a new note..."></textarea>
+                </div>
+                <div class="notes-history" id="notes-history">
+                    <!-- Notes history will appear here -->
+                </div>
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Enhanced Mortgage CRM Pro with all features
+        let clients = [];
+        let currentClientId = null;
+        let selectedClientForEmail = null;
+        let ytdStartDate = null;
+        let ytdEndDate = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates for YTD filter
+            const today = new Date();
+            const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+            
+            document.getElementById('ytd-start-date').valueAsDate = firstDayOfYear;
+            document.getElementById('ytd-end-date').valueAsDate = today;
+            
+            ytdStartDate = firstDayOfYear.toISOString().split('T')[0];
+            ytdEndDate = today.toISOString().split('T')[0];
+            
+            // Load any saved clients from localStorage
+            loadClients();
+            
+            // Set up navigation
+            setupNavigation();
+            
+            // Set up form submission
+            setupClientForm();
+            
+            // Set up template selection
+            setupTemplateSelection();
+            
+            // Set up edit modal
+            setupEditModal();
+            
+            // Set up search functionality
+            setupSearch();
+            
+            // Load the first template by default
+            updateTemplateDisplay('welcome');
+            
+            // Update dashboard stats
+            updateDashboardStats();
+        });
+
+        // Filter YTD settled value by date range
+        function filterYTD() {
+            ytdStartDate = document.getElementById('ytd-start-date').value;
+            ytdEndDate = document.getElementById('ytd-end-date').value;
+            
+            if (!ytdStartDate || !ytdEndDate) {
+                showToast('Please select both start and end dates', 'error');
+                return;
+            }
+            
+            updateDashboardStats();
+            showToast('YTD filter applied');
+        }
+
+        // Load clients from localStorage
+        function loadClients() {
+            const savedClients = localStorage.getItem('mortgageClients');
+            if (savedClients) {
+                clients = JSON.parse(savedClients);
+                renderTracker();
+            }
+        }
+
+        // Navigation functionality
+        function setupNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and sections
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    // Show corresponding section
+                    const target = tab.getAttribute('data-target');
+                    document.getElementById(target).classList.add('active');
+                    
+                    // If showing tracker, render it
+                    if (target === 'application-tracker') {
+                        renderTracker();
+                    }
+                });
+            });
+        }
+
+        // Client form submission
+        function setupClientForm() {
+            document.getElementById('client-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const applicationDate = document.getElementById('application-date').value;
+                const initialNote = document.getElementById('notes').value;
+                
+                const newClient = {
+                    id: Date.now(), // Simple unique ID
+                    name: document.getElementById('full-name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    applicationDate: applicationDate,
+                    loanAmount: parseFloat(document.getElementById('loan-amount').value),
+                    address: document.getElementById('address').value,
+                    lender: document.getElementById('lender').value,
+                    applicantType: document.getElementById('applicant-type').value,
+                    applicationType: document.getElementById('application-type').value,
+                    notes: [{
+                        content: initialNote,
+                        date: new Date().toISOString(),
+                        type: 'initial'
+                    }],
+                    stage: 1, // Start at stage 1
+                    overdue: false,
+                    createdDate: new Date().toISOString(),
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                clients.push(newClient);
+                saveClients();
+                renderTracker();
+                
+                // Reset form
+                this.reset();
+                
+                // Set default application date to today
+                document.getElementById('application-date').valueAsDate = new Date();
+                
+                // Show success message
+                showToast('Client added successfully!');
+                
+                // Switch to tracker view
+                document.querySelector('.nav-tab[data-target="application-tracker"]').click();
+            });
+        }
+
+        // Render the application tracker
+        function renderTracker() {
+            // Clear all stages
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`stage-${i}`).innerHTML = '';
+            }
+            
+            // Add clients to their respective stages
+            clients.forEach(client => {
+                const stageElement = document.getElementById(`stage-${client.stage}`);
+                const overdueClass = client.overdue ? 'overdue' : '';
+                
+                const card = document.createElement('div');
+                card.className = `client-card ${client.lender} ${overdueClass}`;
+                card.dataset.clientId = client.id;
+                card.innerHTML = `
+                    <div class="client-name">${client.name}</div>
+                    <div class="client-details">
+                        <span>$${client.loanAmount.toLocaleString()}</span>
+                        <span>${client.lender}</span>
+                    </div>
+                    <div class="client-details">
+                        <span>${client.applicantType}</span>
+                        <span>${client.applicationType}</span>
+                    </div>
+                    <div class="client-details">
+                        <small>${formatDate(client.applicationDate)}</small>
+                    </div>
+                    <div class="client-actions">
+                        ${client.stage > 1 ? `<button class="action-btn prev" onclick="moveStage(${client.id}, ${client.stage - 1})"><i class="fas fa-arrow-left"></i> Prev</button>` : ''}
+                        <button class="action-btn edit" onclick="editClient(${client.id})"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete" onclick="deleteClient(${client.id})"><i class="fas fa-trash"></i></button>
+                        ${client.stage < 5 ? `<button class="action-btn next" onclick="moveStage(${client.id}, ${client.stage + 1})">Next <i class="fas fa-arrow-right"></i></button>` : ''}
+                    </div>
+                `;
+                
+                stageElement.appendChild(card);
+            });
+            
+            // Update dashboard stats
+            updateDashboardStats();
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Move client between stages
+        function moveStage(clientId, newStage) {
+            const clientIndex = clients.findIndex(c => c.id === clientId);
+            if (clientIndex !== -1) {
+                clients[clientIndex].stage = newStage;
+                clients[clientIndex].lastUpdated = new Date().toISOString();
+                
+                // Simple overdue logic - mark as overdue if in stage for more than 3 days
+                const updatedDate = new Date(clients[clientIndex].lastUpdated);
+                const daysInStage = Math.floor((new Date() - updatedDate) / (1000 * 60 * 60 * 24));
+                clients[clientIndex].overdue = daysInStage > 3;
+                
+                saveClients();
+                renderTracker();
+                showToast(`Moved ${clients[clientIndex].name} to stage ${newStage}`);
+            }
+        }
+
+        // Delete client
+        function deleteClient(clientId) {
+            if (confirm('Are you sure you want to delete this client?')) {
+                const clientName = clients.find(c => c.id === clientId)?.name || '';
+                clients = clients.filter(c => c.id !== clientId);
+                saveClients();
+                renderTracker();
+                showToast(`Deleted client ${clientName}`);
+            }
+        }
+
+        // Edit client
+        function editClient(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (client) {
+                currentClientId = clientId;
+                document.getElementById('edit-name').value = client.name;
+                document.getElementById('edit-email').value = client.email;
+                document.getElementById('edit-phone').value = client.phone;
+                document.getElementById('edit-application-date').value = client.applicationDate;
+                document.getElementById('edit-loan-amount').value = client.loanAmount;
+                document.getElementById('edit-lender').value = client.lender;
+                document.getElementById('edit-applicant-type').value = client.applicantType;
+                document.getElementById('edit-application-type').value = client.applicationType;
+                document.getElementById('edit-new-note').value = '';
+                
+                // Display notes history
+                displayNotesHistory(client.notes);
+                
+                document.getElementById('edit-modal').style.display = 'flex';
+            }
+        }
+
+        // Display notes history in edit modal
+        function displayNotesHistory(notes) {
+            const notesHistory = document.getElementById('notes-history');
+            
+            if (!notes || notes.length === 0) {
+                notesHistory.innerHTML = '<p>No notes yet for this client.</p>';
+                return;
+            }
+            
+            notesHistory.innerHTML = `
+                <h3>Notes History</h3>
+                ${notes.map(note => `
+                    <div class="note-item">
+                        <div class="note-date">${formatDate(note.date)} - ${note.type === 'initial' ? 'Initial Note' : 'Update'}</div>
+                        <div class="note-content">${note.content}</div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Save edited client
+        function setupEditModal() {
+            document.getElementById('edit-client-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const clientIndex = clients.findIndex(c => c.id === currentClientId);
+                if (clientIndex !== -1) {
+                    const newNote = document.getElementById('edit-new-note').value;
+                    
+                    // Update client details
+                    clients[clientIndex].name = document.getElementById('edit-name').value;
+                    clients[clientIndex].email = document.getElementById('edit-email').value;
+                    clients[clientIndex].phone = document.getElementById('edit-phone').value;
+                    clients[clientIndex].applicationDate = document.getElementById('edit-application-date').value;
+                    clients[clientIndex].loanAmount = parseFloat(document.getElementById('edit-loan-amount').value);
+                    clients[clientIndex].lender = document.getElementById('edit-lender').value;
+                    clients[clientIndex].applicantType = document.getElementById('edit-applicant-type').value;
+                    clients[clientIndex].applicationType = document.getElementById('edit-application-type').value;
+                    clients[clientIndex].lastUpdated = new Date().toISOString();
+                    
+                    // Add new note if provided
+                    if (newNote.trim() !== '') {
+                        clients[clientIndex].notes.push({
+                            content: newNote,
+                            date: new Date().toISOString(),
+                            type: 'update'
+                        });
+                    }
+                    
+                    saveClients();
+                    renderTracker();
+                    document.getElementById('edit-modal').style.display = 'none';
+                    showToast('Client updated successfully!');
+                }
+            });
+            
+            document.querySelector('.close-modal').addEventListener('click', function() {
+                document.getElementById('edit-modal').style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === document.getElementById('edit-modal')) {
+                    document.getElementById('edit-modal').style.display = 'none';
+                }
+            });
+        }
+
+        // Save clients to localStorage
+        function saveClients() {
+            localStorage.setItem('mortgageClients', JSON.stringify(clients));
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const activeDeals = clients.filter(c => c.stage < 5);
+            const settledDeals = clients.filter(c => c.stage === 5);
+            const overdueItems = clients.filter(c => c.overdue);
+            
+            const activeThisMonth = activeDeals.filter(c => {
+                const clientDate = new Date(c.createdDate);
+                return clientDate.getMonth() === currentMonth && clientDate.getFullYear() === currentYear;
+            });
+            
+            const settledThisMonth = settledDeals.filter(c => {
+                const clientDate = new Date(c.createdDate);
+                return clientDate.getMonth() === currentMonth && clientDate.getFullYear() === currentYear;
+            });
+            
+            const overdueThisMonth = overdueItems.filter(c => {
+                const clientDate = new Date(c.lastUpdated);
+                return clientDate.getMonth() === currentMonth && clientDate.getFullYear() === currentYear;
+            });
+            
+            // Filter settled deals by YTD date range
+            const settledYTD = settledDeals.filter(c => {
+                const clientDate = new Date(c.createdDate).toISOString().split('T')[0];
+                return clientDate >= ytdStartDate && clientDate <= ytdEndDate;
+            });
+            
+            // Calculate totals
+            const activeValue = activeDeals.reduce((sum, c) => sum + c.loanAmount, 0);
+            const settledValue = settledDeals.reduce((sum, c) => sum + c.loanAmount, 0);
+            const activeMonthValue = activeThisMonth.reduce((sum, c) => sum + c.loanAmount, 0);
+            const settledMonthValue = settledThisMonth.reduce((sum, c) => sum + c.loanAmount, 0);
+            const settledYTDValue = settledYTD.reduce((sum, c) => sum + c.loanAmount, 0);
+            
+            // Update dashboard
+            document.querySelector('.stat-card.active .stat-value').textContent = `$${activeValue.toLocaleString()}`;
+            document.querySelector('.stat-card.active .stat-sub').textContent = `This Month: $${activeMonthValue.toLocaleString()}`;
+            
+            document.querySelector('.stat-card.settled .stat-value').textContent = `$${settledValue.toLocaleString()}`;
+            document.querySelector('.stat-card.settled .stat-sub').textContent = `This Month: $${settledMonthValue.toLocaleString()}`;
+            
+            document.querySelector('.stat-card.overdue .stat-value').textContent = overdueItems.length;
+            document.querySelector('.stat-card.overdue .stat-sub').textContent = `This Month: ${overdueThisMonth.length}`;
+            
+            document.querySelector('.stat-card.ytd .stat-value').textContent = `$${settledYTDValue.toLocaleString()}`;
+            document.querySelector('.stat-card.ytd .stat-sub').textContent = `From ${formatDate(ytdStartDate)} to ${formatDate(ytdEndDate)}`;
+        }
+
+        // Email template functionality
+        function setupTemplateSelection() {
+            document.querySelectorAll('.template-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.template-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    const templateType = item.getAttribute('data-template');
+                    updateTemplateDisplay(templateType);
+                });
+            });
+        }
+
+        function updateTemplateDisplay(templateType) {
+            const templateDisplay = document.querySelector('.template-display');
+            let title = '';
+            let subtitle = '';
+            let content = '';
+            
+            switch(templateType) {
+                case 'welcome':
+                    title = 'Welcome Letter';
+                    subtitle = 'For all new clients';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>We're delighted you've chosen us to assist with your [Application Type]. Our team is committed to making this process as smooth and stress-free as possible for you.</p>
+                        
+                        <p>To get started, please take a moment to complete our client information form:</p>
+                        
+                        <a href="#" class="complete-info-btn">Complete Your Information</a>
+                        
+                        <p>This secure form helps us understand your needs better and ensures we can provide you with the most suitable options.</p>
+                        
+                        <p>Once submitted, your dedicated consultant will contact you within 24 hours to discuss the next steps.</p>
+                    `;
+                    break;
+                    
+                case 'payg-purchase-oo':
+                    title = 'PAYG - Purchase OO';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Purchase OO application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Income Verification</strong></p>
+                        <ul>
+                            <li>Most recent 2 payslips</li>
+                            <li>Bank statements showing salary deposits (last 3 months)</li>
+                            <li>Employment confirmation letter (if available)</li>
+                        </ul>
+                        
+                        <p><strong>3. Financial Position</strong></p>
+                        <ul>
+                            <li>Bank statements showing savings (last 3 months)</li>
+                            <li>Statements for any credit cards or personal loans</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Details</strong></p>
+                        <ul>
+                            <li>Signed contract of sale</li>
+                            <li>Property details from the agent</li>
+                            <li>Deposit payment receipt</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+                    
+                case 'payg-purchase-inv':
+                    title = 'PAYG - Purchase INV';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Purchase INV application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Income Verification</strong></p>
+                        <ul>
+                            <li>Most recent 2 payslips</li>
+                            <li>Bank statements showing salary deposits (last 3 months)</li>
+                            <li>Employment confirmation letter (if available)</li>
+                        </ul>
+                        
+                        <p><strong>3. Financial Position</strong></p>
+                        <ul>
+                            <li>Bank statements showing savings (last 3 months)</li>
+                            <li>Statements for any credit cards or personal loans</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Details</strong></p>
+                        <ul>
+                            <li>Signed contract of sale</li>
+                            <li>Property details from the agent</li>
+                            <li>Deposit payment receipt</li>
+                            <li>Rental estimates (if available)</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+                    
+                case 'payg-refinance':
+                    title = 'PAYG - Refinance';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Refinance application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Income Verification</strong></p>
+                        <ul>
+                            <li>Most recent 2 payslips</li>
+                            <li>Bank statements showing salary deposits (last 3 months)</li>
+                            <li>Employment confirmation letter (if available)</li>
+                        </ul>
+                        
+                        <p><strong>3. Current Loan Details</strong></p>
+                        <ul>
+                            <li>Most recent loan statements (last 6 months)</li>
+                            <li>Current property valuation (if available)</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Information</strong></p>
+                        <ul>
+                            <li>Council rates notice</li>
+                            <li>Home insurance details</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+                    
+                case 'payg-refinance-cash':
+                    title = 'PAYG - Refinance + Cash';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Refinance Cashout application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Income Verification</strong></p>
+                        <ul>
+                            <li>Most recent 2 payslips</li>
+                            <li>Bank statements showing salary deposits (last 3 months)</li>
+                            <li>Employment confirmation letter (if available)</li>
+                        </ul>
+                        
+                        <p><strong>3. Current Loan Details</strong></p>
+                        <ul>
+                            <li>Most recent loan statements (last 6 months)</li>
+                            <li>Current property valuation (if available)</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Information</strong></p>
+                        <ul>
+                            <li>Council rates notice</li>
+                            <li>Home insurance details</li>
+                        </ul>
+                        
+                        <p><strong>5. Cashout Purpose</strong></p>
+                        <ul>
+                            <li>Brief explanation of how you plan to use the cashout funds</li>
+                            <li>Supporting documents (e.g., renovation quotes, investment plans)</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+                    
+                case 'payg-refinance-purchase':
+                    title = 'PAYG - Refinance + Purchase';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Refinance Purchase application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Income Verification</strong></p>
+                        <ul>
+                            <li>Most recent 2 payslips</li>
+                            <li>Bank statements showing salary deposits (last 3 months)</li>
+                            <li>Employment confirmation letter (if available)</li>
+                        </ul>
+                        
+                        <p><strong>3. Current Loan Details</strong></p>
+                        <ul>
+                            <li>Most recent loan statements (last 6 months)</li>
+                            <li>Current property valuation (if available)</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Information</strong></p>
+                        <ul>
+                            <li>Council rates notice</li>
+                            <li>Home insurance details</li>
+                        </ul>
+                        
+                        <p><strong>5. New Purchase Details</strong></p>
+                        <ul>
+                            <li>Signed contract of sale</li>
+                            <li>Property details from the agent</li>
+                            <li>Deposit payment receipt</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+                    
+                case 'abn-purchase-oo':
+                    title = 'ABN - Purchase OO';
+                    subtitle = 'Document request';
+                    content = `
+                        <p>Dear [Client Name],</p>
+                        
+                        <p>Thank you for proceeding with your Purchase OO application. To help us move forward efficiently, we require the following documents:</p>
+                        
+                        <p><strong>1. Personal Identification</strong></p>
+                        <ul>
+                            <li>Driver's Licence (front and back)</li>
+                            <li>Passport (photo page)</li>
+                        </ul>
+                        
+                        <p><strong>2. Business & Income Verification</strong></p>
+                        <ul>
+                            <li>Personal tax returns (last 2 years)</li>
+                            <li>Business tax returns (last 2 years)</li>
+                            <li>ATO Notices of Assessment (last 2 years)</li>
+                            <li>Profit & Loss Statements (last 2 years)</li>
+                        </ul>
+                        
+                        <p><strong>3. Financial Position</strong></p>
+                        <ul>
+                            <li>Bank statements showing savings (last 3 months)</li>
+                            <li>Statements for any credit cards or personal loans</li>
+                        </ul>
+                        
+                        <p><strong>4. Property Details</strong></p>
+                        <ul>
+                            <li>Signed contract of sale</li>
+                            <li>Property details from the agent</li>
+                            <li>Deposit payment receipt</li>
+                        </ul>
+                        
+                        <p>Please reply to this email with the requested documents attached at your earliest convenience.</p>
+                        
+                        <p>If you have any questions about these requirements or need assistance gathering any documents, please don't hesitate to let us know.</p>
+                    `;
+                    break;
+            }
+            
+            templateDisplay.innerHTML = `
+                <div class="template-title">${title}</div>
+                <div class="template-subtitle">${subtitle}</div>
+                <div class="template-content">${content}</div>
+                <div class="template-actions">
+                    <button class="btn" onclick="copyToClipboard()">
+                        <i class="fas fa-copy"></i> Copy to Clipboard
+                    </button>
+                    <button class="btn" style="background: linear-gradient(135deg, var(--teal), #1da57a);" onclick="sendViaGmail()">
+                        <i class="fas fa-paper-plane"></i> Send via Gmail
+                    </button>
+                    <select id="client-select" class="btn" style="background: linear-gradient(135deg, var(--purple), #8e44ad);">
+                        <option value="">Select Client</option>
+                        ${clients.map(client => `<option value="${client.id}">${client.name} (${client.email})</option>`).join('')}
+                    </select>
+                </div>
+            `;
+            
+            // Set up client selection for email personalization
+            document.getElementById('client-select').addEventListener('change', function() {
+                const clientId = parseInt(this.value);
+                selectedClientForEmail = clients.find(c => c.id === clientId);
+            });
+        }
+
+        // Copy template to clipboard
+        function copyToClipboard() {
+            let templateContent = document.querySelector('.template-content').innerText;
+            
+            // Personalize if client is selected
+            if (selectedClientForEmail) {
+                templateContent = personalizeTemplate(templateContent, selectedClientForEmail);
+            }
+            
+            navigator.clipboard.writeText(templateContent)
+                .then(() => showToast('Template copied to clipboard!'))
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    showToast('Failed to copy template', 'error');
+                });
+        }
+
+        // Personalize template with client data
+        function personalizeTemplate(content, client) {
+            return content
+                .replace(/\[Client Name\]/g, client.name)
+                .replace(/\[Application Type\]/g, client.applicationType)
+                .replace(/\[Loan Amount\]/g, `$${client.loanAmount.toLocaleString()}`);
+        }
+
+        // Simulate sending via Gmail
+        function sendViaGmail() {
+            let templateContent = document.querySelector('.template-content').innerText;
+            const subject = document.querySelector('.template-title').textContent;
+            
+            // Personalize if client is selected
+            if (selectedClientForEmail) {
+                templateContent = personalizeTemplate(templateContent, selectedClientForEmail);
+            }
+            
+            const body = encodeURIComponent(templateContent);
+            window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(subject)}&body=${body}`);
+            showToast('Opening Gmail with template...');
+        }
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (searchTerm.length < 2) {
+                    searchResults.innerHTML = '';
+                    return;
+                }
+                
+                const filteredClients = clients.filter(client => 
+                    client.name.toLowerCase().includes(searchTerm) ||
+                    client.email.toLowerCase().includes(searchTerm) ||
+                    client.phone.toLowerCase().includes(searchTerm)
+                );
+                
+                displaySearchResults(filteredClients);
+            });
+        }
+
+        function displaySearchResults(results) {
+            const searchResults = document.getElementById('search-results');
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<p>No clients found matching your search.</p>';
+                return;
+            }
+            
+            searchResults.innerHTML = `
+                <div class="search-results-header">
+                    <span>Found ${results.length} clients</span>
+                </div>
+                ${results.map(client => `
+                    <div class="client-search-result" onclick="editClient(${client.id})">
+                        <div class="client-search-name">${client.name}</div>
+                        <div class="client-search-details">
+                            <span><i class="fas fa-envelope"></i> ${client.email}</span>
+                            <span><i class="fas fa-phone"></i> ${client.phone}</span>
+                        </div>
+                        <div class="client-search-details">
+                            <span>$${client.loanAmount.toLocaleString()}</span>
+                            <span>${client.lender}</span>
+                            <span>${client.applicationType}</span>
+                            <span>${formatDate(client.applicationDate)}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
